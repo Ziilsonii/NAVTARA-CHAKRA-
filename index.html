@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Navtara Chakra</title>
+<style>
+  :root{
+    --ink: #f4e9cf;
+    --ink-dim: #cdbf9e;
+    --deep: #0e1a33;
+    --deep-2: #16254a;
+    --deep-3: #1f3161;
+    --gold: #c9973f;
+    --gold-bright: #e6b85c;
+    --maroon: #7a2331;
+    --maroon-bright: #9c3244;
+    --line: rgba(230, 184, 92, 0.22);
+    --good: #4c8c62;
+    --good-bg: rgba(76,140,98,0.14);
+    --bad: #a3453a;
+    --bad-bg: rgba(163,69,58,0.14);
+    --neutral: #b08a3e;
+    --neutral-bg: rgba(176,138,62,0.14);
+    --card-bg: rgba(255,255,255,0.03);
+    --serif: Georgia, 'Iowan Old Style', 'Palatino Linotype', 'Times New Roman', serif;
+    --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html{ scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *{ box-sizing: border-box; }
+  html, body{ height: 100%; }
+  body{
+    margin:0;
+    background: var(--deep);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before{
+    content:"";
+    position: fixed;
+    inset:0;
+    background:
+      radial-gradient(ellipse 60% 40% at 20% -10%, rgba(201,151,63,0.10), transparent 60%),
+      radial-gradient(ellipse 50% 35% at 100% 0%, rgba(122,35,49,0.18), transparent 60%),
+      var(--deep);
+    z-index:-1;
+  }
+
+  a{ color: var(--gold-bright); }
+
+  .wrap{ max-width: 760px; margin: 0 auto; padding: 0 20px 64px; }
+
+  /* Hero */
+  .hero{
+    padding: 44px 20px 30px;
+    text-align: center;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-glyph{
+    width: 76px; height: 76px; margin: 0 auto 18px;
+    opacity: 0.92;
+  }
+  .eyebrow{
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--gold-bright);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    margin: 0 0 6px;
+  }
+  h1{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(30px, 7vw, 42px);
+    margin: 0 0 10px;
+    color: var(--ink);
+    letter-spacing: 0.01em;
+  }
+  .hero p.sub{
+    max-width: 480px;
+    margin: 0 auto;
+    color: var(--ink-dim);
+    font-size: 15px;
+  }
+  .janma-picker{
+    display:inline-flex; align-items:center; gap:10px;
+    margin-top: 22px;
+    padding: 8px 8px 8px 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--card-bg);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .janma-picker .dot{ width:6px; height:6px; border-radius:50%; background: var(--gold); flex: none; }
+  .janma-picker label{ color: var(--ink); font-size: 14px; }
+  select#janmaSelect{
+    background: var(--deep-2);
+    border: 1px solid var(--line);
+    color: var(--gold-bright);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 7px 30px 7px 14px;
+    font-size: 14px;
+    font-family: var(--sans);
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23e6b85c'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+
+  section{ margin-top: 40px; }
+  h2{
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 22px;
+    color: var(--gold-bright);
+    margin: 0 0 4px;
+  }
+  .section-note{
+    color: var(--ink-dim);
+    font-size: 14px;
+    margin: 0 0 18px;
+    max-width: 62ch;
+  }
+
+  /* Calculator card */
+  .calc-card{
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card-bg);
+    padding: 22px;
+  }
+  .calc-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .field{ flex: 1 1 200px; display:flex; flex-direction:column; gap:6px; }
+  label{ font-size: 12.5px; color: var(--ink-dim); }
+  input[type="datetime-local"]{
+    background: var(--deep-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    border-radius: 9px;
+    padding: 10px 12px;
+    font-size: 15px;
+    font-family: var(--sans);
+    width: 100%;
+    accent-color: var(--gold);
+  }
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator{ filter: invert(0.8) sepia(1) saturate(2) hue-rotate(360deg); }
+  button.primary{
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #241605;
+    border: none;
+    border-radius: 9px;
+    padding: 11px 18px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  button.primary:active{ transform: translateY(1px); }
+  button.ghost{
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  .result{
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--line);
+    display: none;
+  }
+  .result.show{ display: block; }
+  .result-top{
+    display:flex; justify-content: space-between; align-items:baseline; flex-wrap: wrap; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .result-moon{ font-size: 15px; color: var(--ink-dim); }
+  .result-moon b{ color: var(--ink); font-weight: 600; }
+  .badge{
+    display:inline-block;
+    font-size: 12.5px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .badge.good{ color: var(--good); background: var(--good-bg); }
+  .badge.bad{ color: var(--bad); background: var(--bad-bg); }
+  .badge.neutral{ color: var(--neutral); background: var(--neutral-bg); }
+
+  .result-tara{
+    font-family: var(--serif);
+    font-size: 26px;
+    margin: 2px 0 8px;
+    color: var(--gold-bright);
+  }
+  .result-desc{ font-size: 15px; color: var(--ink); margin: 0 0 12px; }
+  .result-remedy{
+    font-size: 14px;
+    color: var(--ink-dim);
+    background: rgba(0,0,0,0.18);
+    border-left: 2px solid var(--gold);
+    padding: 10px 14px;
+    border-radius: 0 8px 8px 0;
+  }
+  .result-remedy b{ color: var(--gold-bright); }
+  .calc-note{ font-size: 12px; color: var(--ink-dim); opacity: 0.75; margin-top: 14px; }
+
+  /* Tables */
+  .tara-list{ display:flex; flex-direction: column; gap: 10px; }
+  .tara-row{
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px 18px;
+    background: var(--card-bg);
+  }
+  .tara-row.self{ border-color: rgba(230,184,92,0.55); background: rgba(230,184,92,0.06); }
+  .tara-head{
+    display:flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .tara-num{
+    font-family: var(--serif);
+    font-size: 19px;
+    color: var(--gold-bright);
+    min-width: 20px;
+  }
+  .tara-name{ font-weight: 600; font-size: 16px; color: var(--ink); }
+  .tara-name .sk{ color: var(--ink-dim); font-weight: 400; font-size: 13.5px; }
+  .tara-stars{
+    font-size: 13px;
+    color: var(--ink-dim);
+    margin: 6px 0 8px;
+  }
+  .tara-stars span{ color: var(--ink); }
+  .tara-body p{ margin: 0; font-size: 14.5px; color: var(--ink-dim); }
+  .tara-body p.remedy{
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+    color: var(--ink);
+  }
+  .tara-body p.remedy b{ color: var(--gold-bright); font-weight: 600; }
+
+  /* Dropdown detail panel */
+  details.nak-details{
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--line);
+  }
+  details.nak-details summary{
+    cursor: pointer;
+    list-style: none;
+    font-size: 13px;
+    color: var(--gold-bright);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  details.nak-details summary::-webkit-details-marker{ display:none; }
+  details.nak-details summary::before{
+    content: "▸";
+    font-size: 11px;
+    transition: transform 0.15s ease;
+    color: var(--gold);
+  }
+  details.nak-details[open] summary::before{ transform: rotate(90deg); }
+  .nak-detail-grid{
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+  }
+  .nak-detail-card{
+    background: rgba(0,0,0,0.18);
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 11px 13px;
+  }
+  .nak-detail-name{
+    font-family: var(--serif);
+    font-size: 15px;
+    color: var(--gold-bright);
+    margin-bottom: 6px;
+  }
+  .nak-detail-row{
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    margin-top: 3px;
+    line-height: 1.4;
+  }
+  .nak-detail-row span{
+    display: block;
+    font-size: 10.5px;
+    color: var(--gold);
+    opacity: 0.85;
+  }
+
+  footer{
+    margin-top: 48px;
+    padding-top: 20px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    opacity: 0.7;
+    text-align: center;
+  }
+
+  @media (max-width: 420px){
+    .hero{ padding: 36px 16px 26px; }
+    .wrap{ padding: 0 14px 48px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <svg class="hero-glyph" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#c9973f" stroke-width="1"/>
+      <g fill="none" stroke="#e6b85c" stroke-width="1.1">
+        <circle cx="50" cy="50" r="3.2" fill="#e6b85c" stroke="none"/>
+      </g>
+    </svg>
+    <p class="eyebrow">नवतारा चक्र</p>
+    <h1>Navtara Chakra</h1>
+    <p class="sub">A nine-fold cycle of nakshatras used to judge the character of a day — cast from a janma nakshatra, tracking where the Moon stands relative to it.</p>
+    <div class="janma-picker">
+      <span class="dot"></span>
+      <label for="janmaSelect">Janma Nakshatra</label>
+      <select id="janmaSelect"></select>
+    </div>
+  </div>
+
+  <section>
+    <h2>Check a date</h2>
+    <p class="section-note" id="calcNote">Finds the Moon's nakshatra for the date and time below, then places it on the Navtara cycle from your janma nakshatra.</p>
+    <div class="calc-card">
+      <div class="calc-row">
+        <div class="field">
+          <label for="dt">Date &amp; time</label>
+          <input type="datetime-local" id="dt">
+        </div>
+        <button class="primary" id="calcBtn">Calculate</button>
+        <button class="ghost" id="nowBtn">Now</button>
+      </div>
+      <div class="result" id="result">
+        <div class="result-top">
+          <span class="result-moon">Moon in <b id="moonNak">—</b>, pada <b id="moonPada">—</b></span>
+          <span class="badge" id="resultBadge">—</span>
+        </div>
+        <div class="result-tara" id="resultTara">—</div>
+        <p class="result-desc" id="resultDesc"></p>
+        <div class="result-remedy" id="resultRemedy"></div>
+      </div>
+      <p class="calc-note">Moon position is computed with a compact astronomical approximation (accurate to roughly ±1°, i.e. within a couple of hours of the true nakshatra change). For a Tara falling within a few hours of a boundary, cross-check against a Panchang before acting on it.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>Predictive table</h2>
+    <p class="section-note">The nine Taras, the three nakshatras in each, and what each governs. Open a Tara to see the deity, animal, tree and direction of its three nakshatras.</p>
+    <div class="tara-list" id="predictiveList"></div>
+  </section>
+
+  <section>
+    <h2>Remedial table</h2>
+    <p class="section-note">Traditional remedies to steady an unfavourable Tara, and how to make the most of a favourable one.</p>
+    <div class="tara-list" id="remedialList"></div>
+  </section>
+
+  <footer>
+    Janma nakshatra and Tara groupings follow standard Parashari Navtara counting. Deity, animal, tree and direction are standard nakshatra attributes; direction is derived from each nakshatra's planetary lord. Predictions and remedies are traditional generalisations, not a substitute for a full chart reading.
+  </footer>
+</div>
+
+<script>
+(function(){
+
+  var NAK = ["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha",
+    "Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha",
+    "Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishta","Shatabhisha","Purva Bhadrapada",
+    "Uttara Bhadrapada","Revati"];
+
+  // Full attribute set for all 27 nakshatras: deity, animal (yoni), tree (vriksha),
+  // direction (derived from the nakshatra's planetary lord), and a favourable activity.
+  var NAK_DATA = [
+    { deity:"Ashwini Kumaras, divine physicians", animal:"Male Horse", tree:"Adulsa (Justicia adhatoda)", direction:"Northwest", activity:"Starting treatments, quick tasks, travel" },
+    { deity:"Yama, god of death and dharma", animal:"Male Elephant", tree:"Amla (Phyllanthus emblica)", direction:"Southeast", activity:"Creative work, transformation, disciplined effort" },
+    { deity:"Agni, god of fire", animal:"Female Sheep/Goat", tree:"Gular fig (Ficus racemosa)", direction:"East", activity:"Purification, cutting ties, fire rituals, cooking" },
+    { deity:"Brahma, the creator", animal:"Male Serpent", tree:"Jamun (Syzygium cumini)", direction:"Northwest", activity:"Business, agriculture, marriage, growth" },
+    { deity:"Soma, the Moon god", animal:"Female Serpent", tree:"Khair (Acacia catechu)", direction:"South", activity:"Research, exploration, romantic pursuits" },
+    { deity:"Rudra, storm god", animal:"Female Dog", tree:"Agarwood (Aquilaria agallocha)", direction:"Southwest", activity:"Breaking old patterns, deep intellectual work" },
+    { deity:"Aditi, mother of the gods", animal:"Female Cat", tree:"Bamboo (Bambusa vulgaris)", direction:"Northeast", activity:"Resuming interrupted work, homecoming" },
+    { deity:"Brihaspati, guru of the gods", animal:"Male Sheep/Goat", tree:"Peepal (Ficus religiosa)", direction:"West", activity:"Spiritual practice, nourishing and sacred work" },
+    { deity:"The Nagas, serpent deities", animal:"Male Cat", tree:"Naagchampa / Undi (Calophyllum inophyllum)", direction:"North", activity:"Research, strategy, occult or healing study" },
+    { deity:"The Pitris, ancestral spirits", animal:"Male Rat", tree:"Banyan (Ficus benghalensis)", direction:"Northwest", activity:"Ancestor rites, ceremony, matters of authority" },
+    { deity:"Bhaga, god of fortune and marriage", animal:"Female Rat", tree:"Palash (Butea monosperma)", direction:"Southeast", activity:"Pleasure, relaxation, creative fulfilment" },
+    { deity:"Aryaman, god of patronage", animal:"Female Cow", tree:"Payar, wild peepal (Ficus arnottiana)", direction:"East", activity:"Partnerships, contracts, marriage" },
+    { deity:"Savitar, the sun's vivifying aspect", animal:"Female Buffalo", tree:"Jasmine / Juhi (Jasminum grandiflorum)", direction:"Northwest", activity:"Skilled craft, learning, closing deals" },
+    { deity:"Tvashtar, the divine architect", animal:"Female Tiger", tree:"Bel / wood apple (Aegle marmelos)", direction:"South", activity:"Design, building, artistic projects" },
+    { deity:"Vayu, god of wind", animal:"Male Buffalo", tree:"Arjun (Terminalia arjuna)", direction:"Southwest", activity:"Business, trade, independent ventures" },
+    { deity:"Indra-Agni, gods of power and fire", animal:"Male Tiger", tree:"Wood apple / ironwood (Limonia acidissima)", direction:"Northeast", activity:"Focused pursuit of goals, competition" },
+    { deity:"Mitra, god of friendship", animal:"Female Deer", tree:"Bakul (Mimusops elengi)", direction:"West", activity:"Friendship, alliances, organising" },
+    { deity:"Indra, king of the gods", animal:"Male Deer", tree:"Semal, red silk-cotton (Bombax ceiba)", direction:"North", activity:"Taking charge, protecting others, administrative work" },
+    { deity:"Nirriti, goddess of dissolution", animal:"Male Dog", tree:"Guggul (Boswellia serrata)", direction:"Northwest", activity:"Root-cause work, investigation, letting go" },
+    { deity:"Apas, the water goddesses", animal:"Male Monkey", tree:"Rattan cane (Calamus pseudotenuis)", direction:"Southeast", activity:"Invigoration, declaring intentions" },
+    { deity:"Vishvedevas, the universal gods", animal:"Female Mongoose", tree:"Jackfruit (Artocarpus heterophyllus)", direction:"East", activity:"Long-term commitments, leadership" },
+    { deity:"Vishnu, the preserver", animal:"Female Monkey", tree:"Rui / milkweed (Calotropis gigantea)", direction:"Northwest", activity:"Learning, listening, teaching" },
+    { deity:"The Ashta Vasus, eight elemental gods", animal:"Female Lion", tree:"Shami / Khejri (Prosopis cineraria)", direction:"South", activity:"Group work, music, wealth-related activity" },
+    { deity:"Varuna, god of cosmic waters", animal:"Female Horse", tree:"Kadam (Anthocephalus cadamba)", direction:"Southwest", activity:"Healing, research, quiet undertakings" },
+    { deity:"Ajaikapada, a form of Rudra", animal:"Male Lion", tree:"Mango (Mangifera indica)", direction:"Northeast", activity:"Transformation, intense spiritual work" },
+    { deity:"Ahirbudhnya, serpent of the deep", animal:"Male Cow", tree:"Neem (Azadirachta indica)", direction:"West", activity:"Deep rest, wisdom, closing out matters" },
+    { deity:"Pushan, nurturer of travellers", animal:"Female Elephant", tree:"Mahua (Madhuca indica)", direction:"North", activity:"Travel, completing unfinished work, arts, animal care" }
+  ];
+
+  var JANMA_IDX = 25; // default: Uttara Bhadrapada, 0-based
+
+  var TARA = [
+    {
+      n:1, name:"Janma Tara", sk:"जन्म तारा",
+      quality:"neutral", label:"Self",
+      desc:"Governs the body, identity and personal routine. Ordinary daily activity is fine; postpone weddings, new ventures or long journeys until a friendlier Tara.",
+      remedy:"Keep the day light and self-focused — rest, health care, personal grooming. Avoid signing contracts or starting anything you intend to last."
+    },
+    {
+      n:2, name:"Sampat Tara", sk:"सम्पत् तारा",
+      quality:"good", label:"Wealth",
+      desc:"Governs gain, prosperity and material progress. One of the most auspicious Taras — favourable for purchases, deals, launches and asking for what you want.",
+      remedy:"Use the day actively: close deals, make purchases, begin new work. Offer a small donation or sweet to mark the gain and keep it circulating."
+    },
+    {
+      n:3, name:"Vipat Tara", sk:"विपत् तारा",
+      quality:"bad", label:"Danger",
+      desc:"Governs obstacles, loss and danger. Inauspicious for travel, investment, surgery or any decision with lasting consequences.",
+      remedy:"Chant your nakshatra-lord's mantra or the Gayatri mantra. Avoid travel and financial risk; keep valuables secured and drive with extra care if you must go out."
+    },
+    {
+      n:4, name:"Kshema Tara", sk:"क्षेम तारा",
+      quality:"good", label:"Wellbeing",
+      desc:"Governs safety, health and steady wellbeing. A safe, favourable day for medical treatment, house-related work and anything needing a calm, protected footing.",
+      remedy:"Good day for health check-ups, moving into a new home, or repairs. Light a lamp (diya) in the evening as thanks for the day's ease."
+    },
+    {
+      n:5, name:"Pratyak Tara", sk:"प्रत्यक् तारा",
+      quality:"bad", label:"Obstruction",
+      desc:"Governs delay and friction. Meetings stall, messages get crossed, and plans meet resistance — not a day to force an outcome.",
+      remedy:"Build in slack and avoid firm deadlines. Recite Vishnu Sahasranama or Hanuman Chalisa; keep communication simple and double-check details before sending."
+    },
+    {
+      n:6, name:"Sadhaka Tara", sk:"साधक तारा",
+      quality:"good", label:"Achievement",
+      desc:"Governs the fulfilment of goals. Strongly favourable for negotiations, interviews, exams, and any pursuit that needs momentum and follow-through.",
+      remedy:"Schedule your most important ask or performance for this Tara when you can. Begin the day with a short prayer to your Ishta Devata to set intention."
+    },
+    {
+      n:7, name:"Vadha Tara", sk:"वध / नैधन तारा",
+      quality:"bad", label:"Destruction",
+      desc:"The most inauspicious Tara — governs disruption, accident and loss. Avoid travel, surgery, large purchases, and starting anything of consequence.",
+      remedy:"Stay low-key: no travel, no major decisions, no risk-taking. Chant the Maha Mrityunjaya mantra and, if possible, spend the day close to home."
+    },
+    {
+      n:8, name:"Mitra Tara", sk:"मित्र तारा",
+      quality:"good", label:"Friendship",
+      desc:"Governs cooperation and goodwill. Favourable for meeting people, partnerships, social events and repairing a strained relationship.",
+      remedy:"Reach out to collaborators or reconnect with someone. A shared meal or small gift strengthens the goodwill this Tara carries."
+    },
+    {
+      n:9, name:"Parama Mitra Tara", sk:"परम मित्र तारा",
+      quality:"good", label:"Best Friend",
+      desc:"The most auspicious Tara — near-universal support for weddings, launches, travel and any important beginning.",
+      remedy:"If you have a choice of dates for something important, this is the Tara to pick. Begin the day with worship of your Ishta Devata to carry the momentum through."
+    }
+  ];
+
+  function qualityBadge(q){
+    if (q === "good") return {cls:"good", text:"Auspicious"};
+    if (q === "bad") return {cls:"bad", text:"Inauspicious"};
+    return {cls:"neutral", text:"Neutral"};
+  }
+
+  // Nakshatras belonging to each Tara group, counted from the current janma nakshatra
+  function computeGroups(){
+    var groupNak = [[],[],[],[],[],[],[],[],[]]; // index 0..8 = Tara 1..9
+    for (var k = 1; k <= 27; k++){
+      var idx = (JANMA_IDX + (k - 1)) % 27;
+      var g = (k - 1) % 9;
+      groupNak[g].push(idx);
+    }
+    return groupNak;
+  }
+
+  function renderLists(){
+    var groupNak = computeGroups();
+    var predWrap = document.getElementById("predictiveList");
+    var remWrap = document.getElementById("remedialList");
+    predWrap.innerHTML = "";
+    remWrap.innerHTML = "";
+
+    TARA.forEach(function(t, i){
+      var idxList = groupNak[i];
+      var stars = idxList.map(function(ix){ return NAK[ix]; }).join(" · ");
+      var b = qualityBadge(t.quality);
+      var isSelf = t.n === 1;
+
+      var detailHtml = '<details class="nak-details"><summary>Deity, animal, tree &amp; direction</summary>' +
+        '<div class="nak-detail-grid">' + idxList.map(function(ix){
+          var d = NAK_DATA[ix];
+          return '<div class="nak-detail-card">' +
+            '<div class="nak-detail-name">' + NAK[ix] + '</div>' +
+            '<div class="nak-detail-row"><span>Deity</span>' + d.deity + '</div>' +
+            '<div class="nak-detail-row"><span>Animal</span>' + d.animal + '</div>' +
+            '<div class="nak-detail-row"><span>Tree</span>' + d.tree + '</div>' +
+            '<div class="nak-detail-row"><span>Direction</span>' + d.direction + '</div>' +
+            '<div class="nak-detail-row"><span>Activity</span>' + d.activity + '</div>' +
+          '</div>';
+        }).join("") + '</div></details>';
+
+      var predRow = document.createElement("div");
+      predRow.className = "tara-row" + (isSelf ? " self" : "");
+      predRow.innerHTML =
+        '<div class="tara-head">' +
+          '<span class="tara-num">' + t.n + '</span>' +
+          '<span class="tara-name">' + t.name + ' <span class="sk">' + t.sk + '</span></span>' +
+          '<span class="badge ' + b.cls + '">' + b.text + '</span>' +
+        '</div>' +
+        '<div class="tara-stars">Nakshatras: <span>' + stars + '</span></div>' +
+        '<div class="tara-body"><p>' + t.desc + '</p></div>' +
+        detailHtml;
+      predWrap.appendChild(predRow);
+
+      var remRow = document.createElement("div");
+      remRow.className = "tara-row" + (isSelf ? " self" : "");
+      remRow.innerHTML =
+        '<div class="tara-head">' +
+          '<span class="tara-num">' + t.n + '</span>' +
+          '<span class="tara-name">' + t.name + ' <span class="sk">' + t.label + '</span></span>' +
+          '<span class="badge ' + b.cls + '">' + b.text + '</span>' +
+        '</div>' +
+        '<div class="tara-body"><p class="remedy"><b>Remedy: </b>' + t.remedy + '</p></div>';
+      remWrap.appendChild(remRow);
+    });
+  }
+
+  // ---------- Moon position (Paul Schlyter low-precision algorithm) ----------
+  function rad(d){ return d * Math.PI / 180; }
+  function deg(r){ return r * 180 / Math.PI; }
+  function norm360(x){ x = x % 360; if (x < 0) x += 360; return x; }
+  function sinD(d){ return Math.sin(rad(d)); }
+  function cosD(d){ return Math.cos(rad(d)); }
+  function atan2D(y,x){ return norm360(deg(Math.atan2(y,x))); }
+
+  function daysSinceEpoch(dateUTC){
+    var y = dateUTC.getUTCFullYear();
+    var m = dateUTC.getUTCMonth() + 1;
+    var day = dateUTC.getUTCDate();
+    var UT = dateUTC.getUTCHours() + dateUTC.getUTCMinutes()/60 + dateUTC.getUTCSeconds()/3600;
+    var d = 367*y - Math.floor(7 * (y + Math.floor((m + 9) / 12)) / 4) + Math.floor(275 * m / 9) + day - 730530;
+    return d + UT / 24;
+  }
+
+  function sunPos(d){
+    var w = norm360(282.9404 + 4.70935e-5 * d);
+    var e = 0.016709 - 1.151e-9 * d;
+    var M = norm360(356.0470 + 0.9856002585 * d);
+    var E = M + deg(e) * sinD(M) * (1 + e * cosD(M));
+    for (var i=0;i<4;i++){
+      var dE = (E - deg(e)*sinD(E) - M) / (1 - e*cosD(E));
+      E -= dE;
+    }
+    var xv = cosD(E) - e;
+    var yv = Math.sqrt(1 - e*e) * sinD(E);
+    var v = atan2D(yv, xv);
+    var lonsun = norm360(v + w);
+    return { M: M, w: w, lon: lonsun };
+  }
+
+  function moonEclipticLongitude(dateUTC){
+    var d = daysSinceEpoch(dateUTC);
+
+    var N = norm360(125.1228 - 0.0529538083 * d);
+    var i = 5.1454;
+    var w = norm360(318.0634 + 0.1643573223 * d);
+    var a = 60.2666;
+    var e = 0.054900;
+    var M = norm360(115.3654 + 13.0649929509 * d);
+
+    var E = M + deg(e) * sinD(M) * (1 + e * cosD(M));
+    for (var it=0; it<6; it++){
+      var dE = (E - deg(e)*sinD(E) - M) / (1 - e*cosD(E));
+      E -= dE;
+    }
+
+    var xv = a * (cosD(E) - e);
+    var yv = a * (Math.sqrt(1 - e*e) * sinD(E));
+    var v = atan2D(yv, xv);
+    var r = Math.sqrt(xv*xv + yv*yv);
+
+    var vw = v + w;
+    var xh = r * (cosD(N)*cosD(vw) - sinD(N)*sinD(vw)*cosD(i));
+    var yh = r * (sinD(N)*cosD(vw) + cosD(N)*sinD(vw)*cosD(i));
+
+    var lonecl = atan2D(yh, xh);
+
+    var sun = sunPos(d);
+    var Ms = sun.M;
+    var Ls = sun.lon;
+    var Lm = norm360(N + w + M);
+    var D = norm360(Lm - Ls);
+    var F = norm360(Lm - N);
+
+    var pert =
+      -1.274 * sinD(M - 2*D) +
+       0.658 * sinD(2*D) +
+      -0.186 * sinD(Ms) +
+      -0.059 * sinD(2*M - 2*D) +
+      -0.057 * sinD(M - 2*D + Ms) +
+       0.053 * sinD(M + 2*D) +
+       0.046 * sinD(2*D - Ms) +
+       0.041 * sinD(M - Ms) +
+      -0.035 * sinD(D) +
+      -0.031 * sinD(M + Ms) +
+      -0.015 * sinD(2*F - 2*D) +
+       0.011 * sinD(M - 4*D);
+
+    return norm360(lonecl + pert);
+  }
+
+  function lahiriAyanamsha(dateUTC){
+    var msPerDay = 86400000;
+    var j2000 = Date.UTC(2000,0,1,12,0,0);
+    var years = (dateUTC.getTime() - j2000) / (msPerDay * 365.25);
+    return 23.8532 + years * (50.29 / 3600);
+  }
+
+  function getNakshatra(dateUTC){
+    var tropicalLon = moonEclipticLongitude(dateUTC);
+    var ayanamsha = lahiriAyanamsha(dateUTC);
+    var siderealLon = norm360(tropicalLon - ayanamsha);
+    var span = 360 / 27;
+    var idx = Math.floor(siderealLon / span);
+    var posInNak = siderealLon - idx * span;
+    var pada = Math.floor(posInNak / (span/4)) + 1;
+    return { idx: idx, name: NAK[idx], pada: pada, lon: siderealLon };
+  }
+
+  function taraFor(targetIdx){
+    var count = ((targetIdx - JANMA_IDX + 27) % 27) + 1;
+    var g = ((count - 1) % 9);
+    return TARA[g];
+  }
+
+  // ---------- UI wiring ----------
+  var dtInput = document.getElementById("dt");
+  var resultEl = document.getElementById("result");
+  var janmaSelect = document.getElementById("janmaSelect");
+  var calcNote = document.getElementById("calcNote");
+
+  NAK.forEach(function(name, i){
+    var opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = name;
+    if (i === JANMA_IDX) opt.selected = true;
+    janmaSelect.appendChild(opt);
+  });
+
+  function updateJanmaDependentText(){
+    document.title = "Navtara Chakra · " + NAK[JANMA_IDX];
+    calcNote.textContent = "Finds the Moon's nakshatra for the date and time below, then places it on the Navtara cycle from " + NAK[JANMA_IDX] + ".";
+  }
+
+  janmaSelect.addEventListener("change", function(){
+    JANMA_IDX = parseInt(janmaSelect.value, 10);
+    updateJanmaDependentText();
+    renderLists();
+    runCalc();
+  });
+
+  function toLocalInputValue(date){
+    var off = date.getTimezoneOffset();
+    var local = new Date(date.getTime() - off*60000);
+    return local.toISOString().slice(0,16);
+  }
+
+  function setNow(){
+    dtInput.value = toLocalInputValue(new Date());
+  }
+  setNow();
+
+  function runCalc(){
+    var val = dtInput.value;
+    var dateObj = val ? new Date(val) : new Date();
+    var nak = getNakshatra(dateObj);
+    var tara = taraFor(nak.idx);
+    var b = qualityBadge(tara.quality);
+
+    document.getElementById("moonNak").textContent = nak.name;
+    document.getElementById("moonPada").textContent = nak.pada;
+    var badgeEl = document.getElementById("resultBadge");
+    badgeEl.textContent = b.text;
+    badgeEl.className = "badge " + b.cls;
+    document.getElementById("resultTara").textContent = tara.n + ". " + tara.name;
+    document.getElementById("resultDesc").textContent = tara.desc;
+    document.getElementById("resultRemedy").innerHTML = "<b>Remedy: </b>" + tara.remedy;
+    resultEl.classList.add("show");
+  }
+
+  document.getElementById("calcBtn").addEventListener("click", runCalc);
+  document.getElementById("nowBtn").addEventListener("click", function(){ setNow(); runCalc(); });
+
+  updateJanmaDependentText();
+  renderLists();
+  runCalc();
+})();
+</script>
+</body>
+</html>
